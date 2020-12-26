@@ -33,3 +33,16 @@ for (let i = 0; i < lines.length; i++) {
 }
 
 log(n)
+
+n = 0
+for (let i = 0; i < lines.length; i++) {
+    let [rule, password] = lines[i]
+    let [firstSecond, letter] = rule.split(' ')
+    let [first, second] = firstSecond.split('-').map(Number)
+    log({ min: first, max: second, letter, password })
+    if ((password[first - 1] === letter) + (password[second - 1] === letter) === 1) {
+        n++
+    }
+}
+
+log(n)
