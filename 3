@@ -15,7 +15,7 @@ function processLine(line) {
 
 let lines = read('3-input').map(processLine)
 
-log('lines', lines)
+// log('lines', lines)
 
 function get(x, y) {
     let line = lines[y]
@@ -26,19 +26,26 @@ function get(x, y) {
     return line[x % width]
 }
 
-let x = 0
-let y = 0
-let n = 0
-
-while (true) {
-    let got = get(x, y)
-    if (got === null) {
-        log(n)
-        break
+function count(xd, yd) {
+    let x = 0
+    let y = 0
+    let n = 0
+    while (true) {
+        let got = get(x, y)
+        if (got === null) {
+            return n
+        }
+        if (got === '#') {
+            n++
+        }
+        x += xd
+        y += yd
     }
-    if (got === '#') {
-        n++
-    }
-    x += 3
-    y += 1
 }
+
+log(count(1, 1)
+    * count(3, 1)
+    * count(5, 1)
+    * count(7, 1)
+    * count(1, 2)
+)
