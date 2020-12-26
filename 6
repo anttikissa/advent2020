@@ -2,7 +2,7 @@
 
 function read(file) {
     let content = require('fs').readFileSync(file, 'utf8')
-    return content.split('\n\n').map(x => x.split('\n')).filter(Boolean)
+    return content.split('\n\n').map(x => x.split('\n').filter(Boolean))
 }
 
 function log(...args) {
@@ -10,6 +10,7 @@ function log(...args) {
 }
 
 let groups = read('6-input')
+// let groups = read('6-test')
 log(groups)
 
 function sum(group) {
