@@ -13,7 +13,11 @@ function log(...args) {
 let isIn = {
 }
 
+let contents = {
+}
+
 let lines = read('7-input')
+// let lines = read('7-test')
 let rules = lines.map(rule => rule.replace(/\.$/, '').split(' contain '))
 for (let rule of rules) {
     let container = rule[0]
@@ -21,14 +25,21 @@ for (let rule of rules) {
     if (rule[1] === 'no other bag') {
         continue
     }
-    let containees = rule[1].split(', ').map(c => c.replace(/^\d+ /, ''))
+    let split = rule[1].split(', ')
+    let containees = split.map(c => {
+        let count = parseInt(c)
+        let color = c.replace(/^\d+ /, '')
+        return { count, color }
+    })
 
     for (let c of containees) {
-        isIn[c] = (isIn[c] || []).concat(container)
+        isIn[c.color] = (isIn[c.color] || []).concat(container)
+        contents[container] = (contents[container] || []).concat(c)
     }
 }
 
-log(isIn)
+// log(isIn)
+// log(contents)
 
 function collect(color, seen) {
     if (isIn[color]) {
@@ -44,5 +55,14 @@ let colors = new Set()
 collect('shiny gold bag', colors)
 log('colors', colors.size)
 
-// log(rules)
+function count(color) {
+    let n = 1
 
+    for (let content of (contents[color] || [])) {
+        n += content.count * count(content.color)
+    }
+
+    return n
+}
+
+log(count('shiny gold bag') - 1)
