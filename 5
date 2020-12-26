@@ -1,0 +1,26 @@
+#!/usr/bin/env node
+
+function read(file) {
+    let content = require('fs').readFileSync(file, 'utf8')
+    return content.split('\n').filter(Boolean)
+}
+
+function log(...args) {
+    console.log(...args)
+}
+
+
+function process(line) {
+    return line.replace(/./g, x => {
+        return ({
+            F: 0,
+            B: 1,
+            L: 0,
+            R: 1,
+        })[x]
+    })
+}
+
+let lines = read('5-input').map(process)
+let nums = lines.map(line => Number('0b' + line))
+log(Math.max(...nums))
