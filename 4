@@ -2,13 +2,50 @@
 
 function read(file) {
     let content = require('fs').readFileSync(file, 'utf8')
-    return content.split('\n').filter(Boolean)
+    return content.split('\n').map(x => x || 'end').filter(Boolean)
+        .map(x => x.split(' ')).flat()
 }
 
 function log(...args) {
     console.log(...args)
 }
 
-let lines = read('4-input')
+// let fields = read('4-test')
+let fields = read('4-input')
+let os = []
+let o = {}
+fields.forEach(field => {
+    if (field === 'end') {
+        os.push(o)
+        o = {}
+    } else {
+        let [key, value] = field.split(':')
+        o[key] = value
+    }
+})
 
-log(lines)
+log(os)
+
+let required = [
+    'byr',
+    'iyr',
+    'eyr',
+    'hgt',
+    'hcl',
+    'ecl',
+    'pid',
+    // 'cid',
+]
+
+let n = 0
+x:
+for (let o of os) {
+    for (let field of required) {
+        if (!o[field]) {
+            continue x
+        }
+    }
+    n++
+}
+
+log(n)
