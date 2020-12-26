@@ -13,14 +13,18 @@ let groups = read('6-input')
 log(groups)
 
 function sum(group) {
-    let all = new Set()
+    let letters = 'abcdefghijklmnopqrstuvwxyz'
+    let all = new Set(letters.split(''))
     for (let person of group) {
         let answers = [...person]
-        for (let answer of answers) {
-            all.add(answer)
+        for (let letter of letters) {
+            if (!answers.includes(letter)) {
+                all.delete(letter)
+            }
         }
     }
 
+    // 3510 too low
     log('set', all)
     return all.size
 }
