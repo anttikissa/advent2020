@@ -1,0 +1,48 @@
+#!/usr/bin/env node
+
+function read(file) {
+    let content = require('fs').readFileSync(file, 'utf8')
+    content = content.replace(/bags/g, 'bag')
+    return content.split('\n').filter(Boolean)
+}
+
+function log(...args) {
+    console.log(...args)
+}
+
+let isIn = {
+}
+
+let lines = read('7-input')
+let rules = lines.map(rule => rule.replace(/\.$/, '').split(' contain '))
+for (let rule of rules) {
+    let container = rule[0]
+
+    if (rule[1] === 'no other bag') {
+        continue
+    }
+    let containees = rule[1].split(', ').map(c => c.replace(/^\d+ /, ''))
+
+    for (let c of containees) {
+        isIn[c] = (isIn[c] || []).concat(container)
+    }
+}
+
+log(isIn)
+
+function collect(color, seen) {
+    if (isIn[color]) {
+        for (let c of isIn[color]) {
+            seen.add(c)
+            collect(c, seen)
+        }
+    }
+}
+
+// 113 too high
+let colors = new Set()
+collect('shiny gold bag', colors)
+log('colors', colors.size)
+
+// log(rules)
+
