@@ -10,5 +10,26 @@ function log(...args) {
 }
 
 let lines = read('2-input')
+    .map(line => line.split(': '))
 
-log('lines', lines)
+function count(letter, string) {
+    if (string.length === 0) {
+        return 0
+    }
+    let [first, ...rest] = string
+    return (first === letter) + count(letter, rest)
+}
+
+let n = 0
+for (let i = 0; i < lines.length; i++) {
+    let [rule, password] = lines[i]
+    let [minMax, letter] = rule.split(' ')
+    let [min, max] = minMax.split('-').map(Number)
+    log({ min, max, letter, password })
+    let c = count(letter, password)
+    if (min <= c && c <= max) {
+        n++
+    }
+}
+
+log(n)
