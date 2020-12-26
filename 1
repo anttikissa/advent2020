@@ -11,10 +11,22 @@ function log(...args) {
 
 let lines = read('1-input').map(Number)
 
+// 1
 for (let i = 0; i < lines.length; i++) {
     for (let j = 0; j < lines.length; j++) {
         if (lines[i] + lines[j] === 2020) {
             log(lines[i], lines[j], lines[i] * lines[j])
+        }
+    }
+}
+
+// 2
+for (let i = 0; i < lines.length; i++) {
+    for (let j = 0; j < lines.length; j++) {
+        for (let k = 0; k < lines.length; k++) {
+            if (lines[i] + lines[j] + lines[k] === 2020) {
+                log(lines[i], lines[j], lines[k], lines[i] * lines[j] * lines[k])
+            }
         }
     }
 }
