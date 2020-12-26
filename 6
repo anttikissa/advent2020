@@ -2,12 +2,32 @@
 
 function read(file) {
     let content = require('fs').readFileSync(file, 'utf8')
-    return content.split('\n').filter(Boolean)
+    return content.split('\n\n').map(x => x.split('\n')).filter(Boolean)
 }
 
 function log(...args) {
     console.log(...args)
 }
 
-let lines = read('1-input')
-log(lines)
+let groups = read('6-input')
+log(groups)
+
+function sum(group) {
+    let all = new Set()
+    for (let person of group) {
+        let answers = [...person]
+        for (let answer of answers) {
+            all.add(answer)
+        }
+    }
+
+    log('set', all)
+    return all.size
+}
+
+let total = 0
+for (let group of groups) {
+    total += sum(group)
+}
+
+log(total)
