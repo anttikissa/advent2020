@@ -9,4 +9,36 @@ function log(...args) {
     console.log(...args)
 }
 
-let lines = read('1-input')
+function processLine(line) {
+    return line.split('')
+}
+
+let lines = read('3-input').map(processLine)
+
+log('lines', lines)
+
+function get(x, y) {
+    let line = lines[y]
+    if (line === undefined) {
+        return null
+    }
+    let width = line.length
+    return line[x % width]
+}
+
+let x = 0
+let y = 0
+let n = 0
+
+while (true) {
+    let got = get(x, y)
+    if (got === null) {
+        log(n)
+        break
+    }
+    if (got === '#') {
+        n++
+    }
+    x += 3
+    y += 1
+}
