@@ -1,51 +1,72 @@
 #!/usr/bin/env node
 
 function read(file) {
-    let content = require('fs').readFileSync(file, 'utf8')
-    return content.split('\n').map(x => x || 'end').filter(Boolean)
-        .map(x => x.split(' ')).flat()
+	let content = require('fs').readFileSync(file, 'utf8')
+	return content
+		.split('\n')
+		.map((x) => x || 'end')
+		.filter(Boolean)
+		.map((x) => x.split(' '))
+		.flat()
 }
 
 function log(...args) {
-    console.log(...args)
+	console.log(...args)
 }
 
-// let fields = read('4-test')
+// let fields = read('4-valid')
 let fields = read('4-input')
 let os = []
 let o = {}
-fields.forEach(field => {
-    if (field === 'end') {
-        os.push(o)
-        o = {}
-    } else {
-        let [key, value] = field.split(':')
-        o[key] = value
-    }
+fields.forEach((field) => {
+	if (field === 'end') {
+		os.push(o)
+		o = {}
+	} else {
+		let [key, value] = field.split(':')
+		o[key] = value
+	}
 })
 
-log(os)
+// log(os)
 
-let required = [
-    'byr',
-    'iyr',
-    'eyr',
-    'hgt',
-    'hcl',
-    'ecl',
-    'pid',
-    // 'cid',
-]
+let required = {
+	byr: (x) => ((x = Number(x)), x >= 1920 && x <= 2002),
+	iyr: (x) => ((x = Number(x)), x >= 2010 && x <= 2020),
+	eyr: (x) => ((x = Number(x)), x >= 2020 && x <= 2030),
+	hgt: (x) => {
+		try {
+			let [_, n, unit] = x.match(/^(\d+)(cm|in)$/)
+			if (unit === 'in') {
+				return n >= 59 && n <= 76
+			}
+			if (unit === 'cm') {
+				return n >= 150 && n <= 193
+			}
+		} catch (e) {
+			return false
+		}
+		return false
+	},
+	hcl: (x) => x.match(/^#[0-9a-f]{6}$/),
+	ecl: (x) => ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'].includes(x),
+	pid: (x) => x.match(/^[0-9]{9}$/),
+	// 'cid',
+}
 
 let n = 0
-x:
-for (let o of os) {
-    for (let field of required) {
-        if (!o[field]) {
-            continue x
-        }
-    }
-    n++
+x: for (let o of os) {
+	for (let field in required) {
+		let validator = required[field]
+		if (o[field] === undefined) {
+			continue x
+		}
+		if (!validator(o[field])) {
+			continue x
+		} else {
+		}
+	}
+	n++
 }
 
 log(n)
