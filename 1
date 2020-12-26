@@ -1,4 +1,20 @@
 #!/usr/bin/env node
 
-console.log('moi!')
+function read(file) {
+    let content = require('fs').readFileSync(file, 'utf8')
+    return content.split('\n').filter(Boolean)
+}
 
+function log(...args) {
+    console.log(...args)
+}
+
+let lines = read('1-input').map(Number)
+
+for (let i = 0; i < lines.length; i++) {
+    for (let j = 0; j < lines.length; j++) {
+        if (lines[i] + lines[j] === 2020) {
+            log(lines[i], lines[j], lines[i] * lines[j])
+        }
+    }
+}
