@@ -10,3 +10,4 @@ function log(...args) {
 }
 
 let lines = read('1-input')
+log(lines)
