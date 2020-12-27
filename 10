@@ -17,8 +17,8 @@ let day = process.argv[1].substr(-2)
 if (isNaN(day)) {
 	day = process.argv[1].substr(-1)
 }
-// let nums = read(`${day}-test`)
-let nums = read(`${day}-input`)
+let nums = read(`${day}-test`)
+// let nums = read(`${day}-input`)
 
 let steps = []
 for (let num of nums) {
@@ -27,8 +27,6 @@ for (let num of nums) {
 
 let max = Math.max(...nums) + 3
 steps[max] = 1
-
-// log(steps, max)
 
 let num = 0
 let ones = 0
@@ -61,7 +59,7 @@ nums.push(max)
 let links = new Map()
 for (let n1 of nums) {
 	for (let n2 of nums) {
-		if ([1,2,3].includes(n2 - n1)) {
+		if ([1, 2, 3].includes(n2 - n1)) {
 			log(n1, n2)
 			links.set(n1, (links.get(n1) || []).concat(n2))
 		}
@@ -70,36 +68,35 @@ for (let n1 of nums) {
 
 log(links)
 
-let results = []
-let resultCount = 0
-
-let high = 0
-
-// How many ways to get from n1 to n2?
-function count(n1, n2) {
-	if (n1 > high) {
-		high = n1
-		log('new high', high, 'trying to reach', n2)
-	}
-	if (n1 === n2) {
-		// results.push(how)
-		resultCount += 1
-		// log('finished', how)
-		return
-	}
-	if (n1 > n2) {
-		return
-	}
-
-	let nextNs = links.get(n1)
-	let result = 0
-	for (let n of nextNs) {
-		// how.push(n)
-		// let nextHow = [...how, n]
-		count(n, n2)
-		// how.pop()
-	}
+function connected(n1, n2) {
+	return Number(!!(links.get(n1) && links.get(n1).includes(n2)))
 }
 
-count(0, max)
-log(resultCount)
+let mem = {}
+
+// How many ways to get from a to b?
+// b is higher than a
+function count(a, b, depth = 0) {
+	let result = 0
+
+	log(' '.repeat(depth) + `count(${a}, ${b})?`)
+
+	// There's a direct way
+	if (connected(a, b)) {
+		result++
+	}
+
+	// All other ways go through links where n must be less than b
+	let nextNs = links.get(a)
+	for (let n of nextNs) {
+		if (n < b) {
+			result += count(n, b, depth + 1)
+		}
+	}
+
+	log(' '.repeat(depth) + `count(${a}, ${b}) is ${result}`)
+
+	return result
+}
+
+log(count(0, max))
