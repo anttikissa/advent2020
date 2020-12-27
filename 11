@@ -9,15 +9,92 @@ function log(...args) {
 	console.log(...args)
 }
 
-function exit() {
-	process.exit(0)
-}
-
 let day = process.argv[1].substr(-2)
 if (isNaN(day)) {
 	day = process.argv[1].substr(-1)
 }
+
 // let lines = read(`${day}-test`)
 let lines = read(`${day}-input`)
 
-log(lines)
+let data = lines.map((line) => line.split(''))
+
+log(data)
+
+let state = data
+
+function get(x, y, state) {
+	let row = state[y]
+	if (!row) {
+		return '.'
+	}
+	return row[x] || '.'
+}
+
+function adjacents(x, y, state) {
+	let result = []
+	for (let i = -1; i <= 1; i++) {
+		for (let j = -1; j <= 1; j++) {
+			if (i || j) {
+				result.push(get(x + i, y + j, state))
+			}
+		}
+	}
+	return result
+}
+
+function occupieds(states) {
+	return states.filter((state) => state === '#').length
+}
+
+// # occupied
+// L unoccupied
+// . floor
+function decide(state, adjacentStates) {
+	if (state === 'L') {
+		if (occupieds(adjacentStates) === 0) {
+			return '#'
+		} else {
+			return 'L'
+		}
+	} else if (state === '#') {
+		if (occupieds(adjacentStates) >= 4) {
+			return 'L'
+		} else {
+			return '#'
+		}
+	}
+	return state
+}
+
+function print(state) {
+	return state.map((row) => row.join('')).join('\n')
+}
+
+while (true) {
+	log(print(state))
+
+	let changed = 0
+	let newState = []
+	for (let y = 0; y < state.length; y++) {
+		let width = state[y].length
+		let newRow = []
+		for (let x = 0; x < width; x++) {
+			let current = get(x, y, state)
+			let next = decide(current, adjacents(x, y, state))
+			if (next !== current) {
+				changed = 1
+			}
+
+			newRow[x] = next
+		}
+		newState.push(newRow)
+	}
+
+	if (changed === 0) {
+		log(print(state).replace(/[^#]/g, '').length)
+		break
+	}
+
+	state = newState
+}
