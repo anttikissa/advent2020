@@ -9,6 +9,11 @@ function log(...args) {
 	console.log(...args)
 }
 
+function error(...args) {
+	log('error', ...args)
+	exit()
+}
+
 function exit() {
 	process.exit(0)
 }
@@ -17,7 +22,82 @@ let day = process.argv[1].substr(-2)
 if (isNaN(day)) {
 	day = process.argv[1].substr(-1)
 }
+
 // let lines = read(`${day}-test`)
 let lines = read(`${day}-input`)
 
-log(lines)
+let commands = lines.map(line => {
+	let [ _, cmd, arg ] = line.match(/^([A-Z])(\d+)$/)
+	return { cmd, arg: Number(arg) }
+})
+
+
+log(commands)
+
+let dir = {
+	// x: east
+	x: 1,
+	// y: north
+	y: 0,
+}
+
+let pos = {
+	x: 0,
+	y: 0,
+}
+
+function left({ x, y }) {
+	return {
+		y: x,
+		x: -y
+	}
+}
+
+function right({ x, y }) {
+	return {
+		y: -x,
+		x: y
+	}
+}
+
+for (let cmd of commands) {
+	switch (cmd.cmd) {
+		case 'F':
+			pos.x += dir.x * cmd.arg
+			pos.y += dir.y * cmd.arg
+			break
+		case 'N':
+			pos.y += cmd.arg
+			break
+		case 'S':
+			pos.y -= cmd.arg
+			break
+		case 'E':
+			pos.x += cmd.arg
+			break
+		case 'W':
+			pos.x -= cmd.arg
+			break
+		case 'R':
+			while (cmd.arg > 0) {
+				dir = right(dir)
+				cmd.arg -= 90
+			}
+			if (cmd.arg !== 0) {
+				error('bad arg')
+			}
+			break
+		case 'L':
+			while (cmd.arg > 0) {
+				dir = left(dir)
+				cmd.arg -= 90
+			}
+			if (cmd.arg !== 0) {
+				error('bad arg')
+			}
+			break
+	}
+}
+
+log(pos)
+log(Math.abs(pos.x) + Math.abs(pos.y))
