@@ -2,18 +2,55 @@
 
 function read(file) {
 	let content = require('fs').readFileSync(file, 'utf8')
-	return content.split('\n').filter(Boolean)
+	return content.split('\n').filter(Boolean).map(Number)
 }
 
 function log(...args) {
 	console.log(...args)
 }
 
+function exit() {
+	process.exit(0)
+}
+
 let day = process.argv[1].substr(-2)
 if (isNaN(day)) {
 	day = process.argv[1].substr(-1)
 }
-// let lines = read(`${day}-test`)
-let lines = read(`${day}-input`)
+// let nums = read(`${day}-test`)
+let nums = read(`${day}-input`)
 
-log(lines)
+let steps = []
+for (let num of nums) {
+	steps[num] = 1
+}
+
+let max = Math.max(...nums) + 3
+steps[max] = 1
+
+log(steps, max)
+
+let num = 0
+let ones = 0
+let threes = 0
+
+while (true) {
+	if (num === max) {
+		log('got max', { num, ones, threes })
+		log('got max', ones * threes)
+		// 1984
+		// your answer is too low
+		exit()
+	}
+	if (steps[num + 1]) {
+		ones++
+		num++
+	} else if (steps[num + 2]) {
+		num += 2
+	} else if (steps[num + 3]) {
+		threes++
+		num += 3
+	} else {
+		log('error', num)
+	}
+}
