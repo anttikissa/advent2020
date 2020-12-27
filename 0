@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 
 function read(file) {
-    let content = require('fs').readFileSync(file, 'utf8')
-    return content.split('\n').filter(Boolean)
+	let content = require('fs').readFileSync(file, 'utf8')
+	return content.split('\n').filter(Boolean)
 }
 
 function log(...args) {
-    console.log(...args)
+	console.log(...args)
 }
 
 let day = process.argv[1].substr(-1)
