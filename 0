@@ -9,7 +9,10 @@ function log(...args) {
 	console.log(...args)
 }
 
-let day = process.argv[1].substr(-1)
+let day = process.argv[1].substr(-2)
+if (isNaN(day)) {
+	day = process.argv[1].substr(-1)
+}
 // let lines = read(`${day}-test`)
 let lines = read(`${day}-input`)
 
