@@ -1,13 +1,51 @@
 #!/usr/bin/env node
 
 function read(file) {
-    let content = require('fs').readFileSync(file, 'utf8')
-    return content.split('\n').filter(Boolean)
+	let content = require('fs').readFileSync(file, 'utf8')
+	return content.split('\n').filter(Boolean)
 }
 
 function log(...args) {
-    console.log(...args)
+	console.log(...args)
 }
 
-let lines = read('8-input')
-log(lines)
+let day = process.argv[1].substr(-1)
+// let lines = read(`${day}-test`)
+let lines = read(`${day}-input`)
+
+let program = lines.map((line) => {
+	let [cmd, arg] = line.split(' ')
+	return { cmd, arg: Number(arg) }
+})
+
+let pc = 0
+let acc = 0
+let seen = []
+
+while (true) {
+	let instr = program[pc]
+
+    if (seen[pc]) {
+        log('again at', pc, acc)
+        break
+    }
+
+    seen[pc] = 1
+
+	if (!instr) {
+		log('no instr', pc)
+	}
+	switch (instr.cmd) {
+		case 'nop':
+			pc++
+            continue
+        case 'acc':
+            pc++
+            acc += instr.arg
+            continue
+        case 'jmp':
+            pc += instr.arg
+            continue
+	}
+}
+
