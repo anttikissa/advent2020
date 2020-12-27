@@ -73,8 +73,14 @@ log(links)
 let results = []
 let resultCount = 0
 
+let high = 0
+
 // How many ways to get from n1 to n2?
-function count(n1, n2, how = []) {
+function count(n1, n2) {
+	if (n1 > high) {
+		high = n1
+		log('new high', high, 'trying to reach', n2)
+	}
 	if (n1 === n2) {
 		// results.push(how)
 		resultCount += 1
@@ -88,10 +94,12 @@ function count(n1, n2, how = []) {
 	let nextNs = links.get(n1)
 	let result = 0
 	for (let n of nextNs) {
-		let nextHow = [...how, n]
-		count(n, n2, nextHow)
+		// how.push(n)
+		// let nextHow = [...how, n]
+		count(n, n2)
+		// how.pop()
 	}
 }
 
 count(0, max)
-log(results.length)
+log(resultCount)
