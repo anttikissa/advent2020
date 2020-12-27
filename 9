@@ -10,7 +10,33 @@ function log(...args) {
 }
 
 let day = process.argv[1].substr(-1)
-// let lines = read(`${day}-test`)
-let lines = read(`${day}-input`)
+// let numbers = read(`${day}-test`)
+let numbers = read(`${day}-input`)
 
-log(lines)
+log(numbers)
+
+// sums[i] is set of preamble sums for position i + N
+let sums = []
+
+let N = 25
+
+for (let i = 0; i < numbers.length - N; i++) {
+	sums[i] = new Set()
+	for (let j = 0; j < N; j++) {
+		for (let k = 0; k < N; k++) {
+			if (j !== k) {
+				sums[i].add(numbers[i + j] + numbers[i + k])
+			}
+		}
+	}
+}
+
+for (let i = N; i < numbers.length; i++) {
+	if (sums[i - N].has(numbers[i])) {
+		// ok
+	} else {
+		log('not ok', i, numbers[i], sums[i - N])
+	}
+}
+
+log(sums)
