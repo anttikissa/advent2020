@@ -11,14 +11,15 @@ function log(...args) {
 
 let day = process.argv[1].substr(-1)
 // let numbers = read(`${day}-test`)
+// let N = 5
 let numbers = read(`${day}-input`)
+let N = 25
 
-log(numbers)
+// log(numbers)
 
 // sums[i] is set of preamble sums for position i + N
 let sums = []
 
-let N = 25
 
 for (let i = 0; i < numbers.length - N; i++) {
 	sums[i] = new Set()
@@ -31,12 +32,32 @@ for (let i = 0; i < numbers.length - N; i++) {
 	}
 }
 
+let target
+
 for (let i = N; i < numbers.length; i++) {
 	if (sums[i - N].has(numbers[i])) {
 		// ok
 	} else {
-		log('not ok', i, numbers[i], sums[i - N])
+		log('not ok', numbers[i])
+		target = numbers[i]
 	}
 }
 
-log(sums)
+for (let i = 0; i < numbers.length; i++) {
+	let sum = 0
+	for (let j = i; j < numbers.length; j++) {
+		sum += numbers[j]
+		if (sum === target) {
+			log('found sum', { i, j })
+			log('found sum', numbers[i] + numbers[j])
+			let slice = numbers.slice(i, j + 1)
+			let min = Math.min(...slice)
+			let max = Math.max(...slice)
+			log('sum', min, max, min + max)
+			// 15538721 too low!
+		}
+	}
+}
+
+// log(sums)
+
