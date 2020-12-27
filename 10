@@ -28,7 +28,7 @@ for (let num of nums) {
 let max = Math.max(...nums) + 3
 steps[max] = 1
 
-log(steps, max)
+// log(steps, max)
 
 let num = 0
 let ones = 0
@@ -38,9 +38,9 @@ while (true) {
 	if (num === max) {
 		log('got max', { num, ones, threes })
 		log('got max', ones * threes)
+		break
 		// 1984
 		// your answer is too low
-		exit()
 	}
 	if (steps[num + 1]) {
 		ones++
@@ -54,3 +54,44 @@ while (true) {
 		log('error', num)
 	}
 }
+
+nums.push(0)
+nums.push(max)
+
+let links = new Map()
+for (let n1 of nums) {
+	for (let n2 of nums) {
+		if ([1,2,3].includes(n2 - n1)) {
+			log(n1, n2)
+			links.set(n1, (links.get(n1) || []).concat(n2))
+		}
+	}
+}
+
+log(links)
+
+let results = []
+let resultCount = 0
+
+// How many ways to get from n1 to n2?
+function count(n1, n2, how = []) {
+	if (n1 === n2) {
+		// results.push(how)
+		resultCount += 1
+		// log('finished', how)
+		return
+	}
+	if (n1 > n2) {
+		return
+	}
+
+	let nextNs = links.get(n1)
+	let result = 0
+	for (let n of nextNs) {
+		let nextHow = [...how, n]
+		count(n, n2, nextHow)
+	}
+}
+
+count(0, max)
+log(results.length)
