@@ -19,7 +19,7 @@ let lines = read(`${day}-input`)
 
 let data = lines.map((line) => line.split(''))
 
-log(data)
+// log(data)
 
 let state = data
 
@@ -43,6 +43,46 @@ function adjacents(x, y, state) {
 	return result
 }
 
+function maxX(state) {
+	return state[0].length - 1
+}
+
+function maxY(state) {
+	return state.length - 1
+}
+
+function seen(x, y, state) {
+	let result = []
+	for (let i = -1; i <= 1; i++) {
+		for (let j = -1; j <= 1; j++) {
+			if (i || j) {
+				let xx = x
+				let yy = y
+				while (true) {
+					// log('check', { i, j, x, y, xx, yy })
+					xx += i
+					yy += j
+					if (get(xx, yy, state) !== '.') {
+						result.push(get(xx, yy, state))
+						// log('found', get(xx, yy, state))
+						break
+					}
+					if (xx < 0 || yy < 0 || xx > maxX(state) || yy > maxY(state)) {
+						// log('outside')
+						break
+					}
+				}
+				// result.push(get(x + i, y + j, state))
+			}
+		}
+	}
+
+	return result
+}
+
+// log(print(state))
+// log(seen(5, 1, state))
+
 function occupieds(states) {
 	return states.filter((state) => state === '#').length
 }
@@ -58,7 +98,7 @@ function decide(state, adjacentStates) {
 			return 'L'
 		}
 	} else if (state === '#') {
-		if (occupieds(adjacentStates) >= 4) {
+		if (occupieds(adjacentStates) >= 5) {
 			return 'L'
 		} else {
 			return '#'
@@ -81,7 +121,7 @@ while (true) {
 		let newRow = []
 		for (let x = 0; x < width; x++) {
 			let current = get(x, y, state)
-			let next = decide(current, adjacents(x, y, state))
+			let next = decide(current, seen(x, y, state))
 			if (next !== current) {
 				changed = 1
 			}
