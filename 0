@@ -9,5 +9,8 @@ function log(...args) {
     console.log(...args)
 }
 
-let lines = read('1-input')
+let day = process.argv[1].substr(-1)
+// let lines = read(`${day}-test`)
+let lines = read(`${day}-input`)
+
 log(lines)
